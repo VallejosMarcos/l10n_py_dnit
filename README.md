@@ -1,54 +1,44 @@
-# Paraguay · Plan de Cuentas DNIT
+# Localización Paraguay para Odoo 19
 
-Plan de cuentas para Odoo 19 basado en el **Modelo de Estados Financieros**
-publicado por la DNIT (Dirección Nacional de Ingresos Tributarios). La
-estructura y los códigos siguen el formulario oficial de Balance General y
-Estado de Resultados.
+Localización contable y fiscal de Paraguay para Odoo 19, basada en la
+documentación de la **DNIT** (Dirección Nacional de Ingresos Tributarios) y la
+**SET**. Desarrollada por Marcos Vallejos.
 
-## Qué incluye
+## Módulos
 
-- **27 grupos** jerárquicos (Activo, Pasivo, Patrimonio Neto, Resultados).
-- **81 cuentas** con su `account_type` mapeado al estándar contable de Odoo.
-- **IVA 10% y 5%** (venta y compra) más exento, con sus cuentas de débito y
-  crédito fiscal.
-- Cuentas por defecto de la compañía: cliente, impuestos y diferencia de cambio.
+| Módulo | Qué hace |
+|---|---|
+| **l10n_py_dnit** | Plan de cuentas (Modelo de Estados Financieros DNIT), IVA 10/5/exento y posiciones fiscales. |
+| **l10n_py_dnit_base** | RUC con dígito verificador (módulo 11) y tipos de identificación (RUC, CI, Pasaporte, Carnet de Residencia). |
+| **l10n_py_dnit_account** | Tipos de documento de la SET, timbrado y numeración fiscal de facturas (establecimiento-punto-número). |
+| **l10n_py_dnit_edi** | Estructura base para SIFEN / e-Kuatiá (*scaffold*, ver abajo). |
 
-Los códigos respetan el formato del formulario DNIT:
+Cada módulo es instalable por separado; las dependencias se resuelven solas.
 
-```
-1-              ACTIVO
-1-01-           ACTIVO CORRIENTE
-1-01-01-        DISPONIBILIDADES
-1-01-01-01      CAJA
-```
+## Características destacadas
+
+- **RUC + DV** validado con el algoritmo oficial (módulo 11, base 11),
+  verificado contra constancias reales.
+- **Timbrado** como rango de numeración por tipo de documento, establecimiento
+  y punto de expedición, con control de vigencia.
+- **Numeración fiscal** correlativa, asignada al validar la factura con bloqueo
+  de fila (sin huecos ni duplicados) e inmutable una vez emitida.
+- **Tipos de documento**: Factura, Autofactura, Nota de Crédito, Nota de Débito
+  y Nota de Remisión.
+
+## SIFEN
+
+`l10n_py_dnit_edi` provee el punto de extensión (estado del documento, CDC) pero
+**no** incluye la firma digital, los esquemas XSD ni el envío a la DNIT: eso
+depende del certificado del contribuyente y de una librería de firma. Queda
+preparado para que un conector lo complete.
 
 ## Instalación
 
-1. Copiar el módulo a una ruta del `addons_path`.
-2. Actualizar la lista de aplicaciones e instalar **Paraguay - Plan de Cuentas DNIT**.
-3. En una compañía paraguaya sin plan asignado, ir a *Contabilidad → Configuración*
-   y seleccionar el plan **Paraguay - Plan de Cuentas DNIT**.
-
-> Convive con otros planes paraguayos: este módulo registra el código de plantilla
-> `py_dnit`, distinto del `py` de la OCA. El plan se elige manualmente.
-
-## Estructura
-
-```
-l10n_py_dnit/
-├── __manifest__.py
-├── models/
-│   └── template_py_dnit.py        # metadatos + cuentas por defecto
-└── data/template/                 # cargados automáticamente por el framework
-    ├── account.group-py_dnit.csv
-    ├── account.account-py_dnit.csv
-    ├── account.tax.group-py_dnit.csv
-    └── account.tax-py_dnit.csv
-```
-
-## Fuente
-
-DNIT — *Plantilla Modelo de Estados Financieros* (RG 110/13 y modificatorias).
+Agregar el repositorio al `addons_path`, actualizar la lista de aplicaciones e
+instalar los módulos que se necesiten. Para una empresa paraguaya nueva,
+seleccionar el plan **Paraguay - Plan de Cuentas DNIT** en la configuración
+contable.
 
 ## Licencia
 
